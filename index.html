@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Facade Glazing Visualizer</title>
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/twentytwenty@3.0.0/src/twentytwenty.css"> -->
+    <link href="css/twentytwenty-no-compass.css" rel="stylesheet" type="text/css" />
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -43,10 +45,8 @@
         .image-container {
             width: 100%;
             height: 500px;
-            overflow: hidden;
-            border-radius: 8px;
-            margin-bottom: 20px;
             position: relative;
+            display: flex;
         }
         .image-container img {
             width: 100%;
@@ -111,58 +111,55 @@
             font-size: 14px;
             margin-top: 5px;
         }
-        
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Facade Glazing Visualizer</h1>
         <p>Compare glazing options for different building types</p>
-        
+
         <div class="controls">
             <select id="lightingCondition">
                 <option value="Sunny">Sunny</option>
                 <option value="Cloudy">Cloudy</option>
                 <option value="Night">Night</option>
             </select>
-            
+
             <select id="viewAngle">
                 <option value="Far">Far</option>
                 <option value="Close">Close</option>
-                <!-- <option value="interior">Interior View</option> -->
+            </select>
+            <select id="comparisonGlazing">
+                <option value="None">None</option>
+                <option value="Shine">Shine</option>
+                <option value="Stropray">Stropray</option>
+                <option value="Ultraselect">Ultraselect</option>
+                <option value="VRE">VRE</option>
             </select>
         </div>
-        
-        <div class="image-container">
-            <img id="mainImage" src="images/cultural-center-Sunny-Far-Shine.png" alt="Building Facade">
+
+        <div class="image-container", id="compareContainer">
+            <!-- <div id="imageLeft"></div>
+            <div id="imageRight"></div>
+            <div class="divider" id="imageDivider"></div> -->
+            <img id="mainImage" src="images/cultural-center-sunny-Far-Shine.png" alt="Building Facade">
+            <!-- <img id="secondImage" src="images/cultural-center-sunny-Far-VRE.png" alt="Building Facade"> -->
         </div>
-        
+
         <div class="building-types">
             <h2 id="buildingTypesToggle">
                 Building Types
                 <span class="toggle-icon">▼</span>
             </h2>
-            
+
             <div class="building-type-grid" id="buildingTypePanel">
-                <!-- <div class="building-type" data-type="modern-office">
-                    <img src="images/modern-office.jpg" alt="Modern Office">
-                    <p>Modern Office</p>
-                </div>
-                <div class="building-type" data-type="residential-tower">
-                    <img src="images/residential-tower.jpg" alt="Residential Tower">
-                    <p>Residential Tower</p>
-                </div>
-                <div class="building-type" data-type="retail-complex">
-                    <img src="images/retail-complex.jpg" alt="Retail Complex">
-                    <p>Retail Complex</p>
-                </div> -->
                 <div class="building-type" data-type="cultural-center">
-                    <img src="images/cultural-center-Sunny-Far-Shine.png" alt="Cultural Center">
+                    <img src="images/cultural-center-sunny-Far-Shine.png" alt="Cultural Center">
                     <p>Cultural Center</p>
                 </div>
             </div>
         </div>
-        
+
         <div class="glazing-options">
             <h2>Glazing Options</h2>
             <select id="glazingType">
@@ -171,7 +168,7 @@
                 <option value="Ultraselect">Ultraselect</option>
                 <option value="VRE">VRE</option>
             </select>
-            
+
             <div class="glazing-specs" id="glazingSpecs">
                 <div class="spec-item">
                     <span>Light Transmission:</span>
@@ -194,7 +191,11 @@
                 </div>
             </div>
         </div>
+        <!-- <div class="twentytwenty-container" id="twentytwentyContainer"></div> -->
     </div>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script src="js/jquery.event.move.js"></script>
+    <script src="js/jquery.twentytwenty.js"></script>
 
     <script src="script.js"></script>
 </body>
