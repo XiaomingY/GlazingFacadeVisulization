@@ -50,6 +50,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateMainImage() {
+        currentLighting = lightingCondition.value;
+        currentView = viewAngle.value;
+        currentGlazing = glazingType.value;
         const imagePath = `images/${currentBuildingType}-${currentLighting}-${currentView}-${currentGlazing}.png`;
         mainImage.src = imagePath;
         updateComparisonImage();
@@ -94,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
         solarHeatGain.textContent = specs.solarHeatGain;
         reflectivity.textContent = specs.reflectivity;
         glazingDescription.textContent = specs.description;
+        updateMainImage()
     }
 
     function updateComparisonImage() {
@@ -102,47 +106,58 @@ document.addEventListener('DOMContentLoaded', function() {
             disableComparison();
         } else {
             const comparisonImagePath = `images/${currentBuildingType}-${currentLighting}-${currentView}-${comparison}.png`;
-            if ($("#secondImage").length) {
-                $("#secondImage").attr("src", comparisonImagePath);
-            } else {
-                enableComparison(comparisonImagePath, comparison);
-            }
+            updateComparison(comparisonImagePath, comparison);
         }
     }
-    function enableComparison(newImageSrc, comparison) {
-        var $container = $(".image-container");
-        
-        if (!$container.hasClass("twentytwenty-container")) {
-            // Append second image if not already present
-            if ($container.find("#secondImage").length === 0) {
-                $secondImage = $(`<img id="secondImage" src="${newImageSrc}" alt="Comparison Image" style="display: none;">`);
-                $container.append($secondImage);
-            } else {
-                $("#secondImage").attr("src", newImageSrc);
-            }
     
-            //Initialize TwentyTwenty after the second image is fully loaded
-            $("#secondImage").on("load", function () {
-                $secondImage.show();
-                $container.twentytwenty({
-                    default_offset_pct: .5, // How much of the before image is visible when the page loads
-                    orientation: 'horizontal', // Orientation of the before and after images ('horizontal' or 'vertical')
-                    before_label: currentGlazing, // Set a custom before label
-                    after_label: comparison, // Set a custom after label
-                    no_overlay: false, //Do not show the overlay with before and after
-                    move_slider_on_hover: false, // Move slider on mouse hover?
-                    move_with_handle_only: true, // Allow a user to swipe anywhere on the image to control slider movement. 
-                    click_to_move: true // Allow a user to click (or tap) anywhere on the image to move the slider to that location.
-                  });
-            });
+    function updateComparison(newImageSrc, comparison) {
+        const $container = $(".image-container");
+        const $secondImage = $("#secondImage");
+    
+        if ($container.hasClass("twentytwenty-container")) {
+            // twentytwenty is already initialized, just update the image and label
+            $secondImage.attr("src", newImageSrc);
+            console.log("change label")
+            console.log(comparison)
+            // $('.twentytwenty-after-label').text(comparison);
+            $('.twentytwenty-after-label').attr('data-content', comparison);
+            $('.twentytwenty-after-label span').text(comparison);
+            // $('.twentytwenty-before-label').text(currentGlazing);
+            $('.twentytwenty-before-label').attr('data-content', currentGlazing);
+            $('.twentytwenty-before-label span').text(currentGlazing);
 
-            // var $firstImage = $container.find("img:first");
-            // var $secondImage = $("#secondImage");
-
-            // $.when($firstImage.load(), $secondImage.load()).then(function() {
-            //     $container.twentytwenty();
-            // });
+        } else {
+            // twentytwenty is NOT initialized, initialize it
+            enableComparison(newImageSrc, comparison);
         }
+    }
+    
+    function enableComparison(newImageSrc, comparison) {
+        let  $container = $(".image-container");
+        let $secondImage = $("#secondImage");
+    
+        if ($secondImage.length === 0) {
+            $secondImage = $(`<img id="secondImage" src="${newImageSrc}" alt="Comparison Image" style="display: none;">`);
+            $container.append($secondImage);
+        } else {
+            $secondImage.attr("src", newImageSrc);
+        }
+    
+        $("#secondImage").on("load", function() {
+            $secondImage.show();
+            if (!$container.hasClass("twentytwenty-container")) {
+                $container.twentytwenty({
+                    default_offset_pct: 0.5,
+                    orientation: 'horizontal',
+                    before_label: currentGlazing,
+                    after_label: comparison,
+                    no_overlay: false,
+                    move_slider_on_hover: false,
+                    move_with_handle_only: true,
+                    click_to_move: true
+                });
+            }
+        });
     }
     
     
