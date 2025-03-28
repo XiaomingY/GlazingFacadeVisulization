@@ -7,10 +7,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const buildingTypePanel = document.getElementById('buildingTypePanel');
     const buildingTypes = document.querySelectorAll('.building-type');
     const glazingType = document.getElementById('glazingType');
-    const lightTransmission = document.getElementById('lightTransmission');
-    const uValue = document.getElementById('uValue');
-    const solarHeatGain = document.getElementById('solarHeatGain');
-    const reflectivity = document.getElementById('reflectivity');
+    const solarTransmission = document.getElementById('Solar Transmission');
+    const solarReflectance = document.getElementById('Solar Reflectance');
+    const visibleTransmission = document.getElementById('Visible Transmission');
+    const visibleReflectance = document.getElementById('Visible Reflectance');
     const glazingDescription = document.getElementById('glazingDescription');
     const comparisonGlazing = document.getElementById('comparisonGlazing');
 
@@ -43,10 +43,29 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function selectBuildingType(event) {
-        currentBuildingType = event.target.getAttribute('data-type');
-        updateMainImage();
-        buildingTypes.forEach(t => t.style.border = '1px solid #ddd');
-        event.target.style.border = '2px solid #007bff';
+        // **The Problem:**
+        // You were trying to get the data-type from `event.target`, which might be the <img> inside the .building-type div, not the div itself.
+        // If you click on the image, the target is the image, which doesn't have the data-type attribute.
+        // If you click on the space around the image, the target is the div, which does have the data-type.
+        // **The Solution:**
+        // We need to traverse up the DOM tree to find the .building-type element, regardless of whether the click was on the image or the div.
+        
+        let buildingTypeElement = event.target;
+        // Check if the clicked element is not the building type div itself
+        if (!buildingTypeElement.classList.contains('building-type')) {
+            // Traverse up to the parent element (which should be the .building-type div)
+            buildingTypeElement = buildingTypeElement.closest('.building-type');
+        }
+        
+        // Check if we found the building type element
+        if (buildingTypeElement) {
+            currentBuildingType = buildingTypeElement.getAttribute('data-type');
+            updateMainImage();
+            buildingTypes.forEach(t => t.style.border = '1px solid #ddd');
+            buildingTypeElement.style.border = '2px solid #007bff';
+        } else {
+            console.error("Could not find building type element.");
+        }
     }
 
     function updateMainImage() {
@@ -59,43 +78,45 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateGlazingSpecs() {
+        currentGlazing = glazingType.value;
         const glazingSpecs = {
             'Shine': {
-                lightTransmission: '90%',
-                uValue: '5.8 W/m²K',
-                solarHeatGain: '0.86',
-                reflectivity: 'Low',
-                description: 'Standard clear glass with high transparency'
+                'Solar Transmission': '25%',
+                'Solar Reflectance': '38%',
+                'Visible Transmission': '53%',
+                'Visible Reflectance': '20%',
+                description: 'High reflectance with extremely low solar factor'
+            
             },
             'Stropray': {
-                lightTransmission: '50%',
-                uValue: '5.7 W/m²K',
-                solarHeatGain: '0.50',
-                reflectivity: 'Medium',
-                description: 'Tinted glass with reduced solar heat gain and glare'
+                'Solar Transmission': '27%',
+                'Solar Reflectance': '48%',
+                'Visible Transmission': '56%',
+                'Visible Reflectance': '17%',
+                description: 'High performance in solar control for warm regions'
             },
             'Ultraselect': {
-                lightTransmission: '30%',
-                uValue: '5.6 W/m²K',
-                solarHeatGain: '0.35',
-                reflectivity: 'High',
-                description: 'Reflective coating reduces heat gain and provides privacy'
+                'Solar Transmission': '47%',
+                'Solar Reflectance': '52%',
+                'Visible Transmission': '70%',
+                'Visible Reflectance': '5%',
+                description: 'Premium solar control coatings for fully glazed commercial facades'
             },
             'VRE': {
-                lightTransmission: '70%',
-                uValue: '1.8 W/m²K',
-                solarHeatGain: '0.40',
-                reflectivity: 'Medium-Low',
-                description: 'Low-emissivity coating for improved thermal performance'
+                'Solar Transmission': '25%',
+                'Solar Reflectance': '56%',
+                'Visible Transmission': '43%',
+                'Visible Reflectance': '45%',
+                description: 'Outstanding performance and aesthetics'
             }
         };
 
         const specs = glazingSpecs[currentGlazing];
 
-        lightTransmission.textContent = specs.lightTransmission;
-        uValue.textContent = specs.uValue;
-        solarHeatGain.textContent = specs.solarHeatGain;
-        reflectivity.textContent = specs.reflectivity;
+        solarTransmission.textContent = specs['Solar Transmission'];
+        solarReflectance.textContent = specs['Solar Reflectance'];
+        visibleReflectance.textContent = specs['Visible Reflectance'];
+        visibleTransmission.textContent = specs['Visible Transmission'];
         glazingDescription.textContent = specs.description;
         updateMainImage()
     }
