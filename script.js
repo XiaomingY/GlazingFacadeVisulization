@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
         currentLighting = lightingCondition.value;
         currentView = viewAngle.value;
         currentGlazing = glazingType.value;
-        const imagePath = `images/${currentBuildingType}-${currentLighting}-${currentView}-${currentGlazing}.png`;
+        const imagePath = `images/${currentBuildingType}-${currentLighting}-${currentView}-${currentGlazing}.jpg`;
         mainImage.src = imagePath;
         updateComparisonImage();
     }
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (comparison === "None") {
             disableComparison();
         } else {
-            const comparisonImagePath = `images/${currentBuildingType}-${currentLighting}-${currentView}-${comparison}.png`;
+            const comparisonImagePath = `images/${currentBuildingType}-${currentLighting}-${currentView}-${comparison}.jpg`;
             updateComparison(comparisonImagePath, comparison);
         }
     }
